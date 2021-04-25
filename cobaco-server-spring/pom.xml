@@ -141,6 +141,17 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <spring.datasource.username>${env.DB_USERNAME}</spring.datasource.username>
+                        <spring.datasource.password>${env.DB_PASSWORD}</spring.datasource.password>
+                        <spring.datasource.url>${env.DB_URL}</spring.datasource.url>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
