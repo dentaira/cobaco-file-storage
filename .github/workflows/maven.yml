@@ -14,6 +14,21 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: ${{ secrets.DB_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_DB: cobaco
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 15432:5432
+    
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 15
@@ -21,6 +36,11 @@ jobs:
       with:
         java-version: '15'
         distribution: 'adopt'
+    - name: Create Tables
+      run: psql -d postgresql://postgres@localhost:15432/cobaco -f schema.sql
+      working-directory: ./cobaco-server-spring/src/test/resources
+      env:
+        PGPASSWORD: ${{ secrets.DB_PASSWORD }}
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
@@ -29,3 +49,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
     - name: Build with Maven
       run: mvn -B package --file ./cobaco-server-spring/pom.xml
+      env: 
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_URL: ${{ secrets.DB_URL }}
