@@ -1,8 +1,8 @@
 package dentaira.cobaco.server.file.web.api;
 
-import dentaira.cobaco.server.file.FileService;
 import dentaira.cobaco.server.file.Owner;
 import dentaira.cobaco.server.file.StoredFile;
+import dentaira.cobaco.server.file.app.FileService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;

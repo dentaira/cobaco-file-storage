@@ -1,5 +1,6 @@
-package dentaira.cobaco.server.file;
+package dentaira.cobaco.server.file.app;
 
+import dentaira.cobaco.server.file.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
