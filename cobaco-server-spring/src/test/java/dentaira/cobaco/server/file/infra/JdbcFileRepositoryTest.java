@@ -54,10 +54,6 @@ class JdbcFileRepositoryTest {
     }
 
     @Nested
-    @JdbcTest
-    @AutoConfigureMybatis
-    @DatabaseRiderTest
-    @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     @DisplayName("searchRoot(UserAccount)はUserAccountが所有するRoot直下のFileを取得する")
     class SearchRootTest {
 
@@ -81,10 +77,6 @@ class JdbcFileRepositoryTest {
     }
 
     @Nested
-    @JdbcTest
-    @AutoConfigureMybatis
-    @DatabaseRiderTest
-    @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     @DataSet("dentaira/cobaco/server/file/infra/JdbcFileRepositoryTest-data/SearchTest/setup-search.yml")
     @DisplayName("search(String,UserAccount)はUserAccountが所有する指定したFolder直下にあるFileを取得する")
     class SearchTest {
@@ -123,10 +115,6 @@ class JdbcFileRepositoryTest {
     }
 
     @Nested
-    @JdbcTest
-    @AutoConfigureMybatis
-    @DatabaseRiderTest
-    @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     @DataSet("dentaira/cobaco/server/file/infra/JdbcFileRepositoryTest-data/FindByIdTest/setup-findById.yml")
     @ExtendWith(SoftAssertionsExtension.class)
     @DisplayName("findById(String,Owner)はOwnerが所有するidが一致するFileを取得する")
@@ -190,10 +178,6 @@ class JdbcFileRepositoryTest {
     }
 
     @Nested
-    @JdbcTest
-    @AutoConfigureMybatis
-    @DatabaseRiderTest
-    @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     @DataSet("dentaira/cobaco/server/file/infra/JdbcFileRepositoryTest-data/SearchForAncestorsTest/setup-searchForAncestors.yml")
     @DisplayName("searchForAncestorsは祖先フォルダ全てのListを返す")
     class SearchForAncestorsTest {
@@ -224,10 +208,6 @@ class JdbcFileRepositoryTest {
     }
 
     @Nested
-    @JdbcTest
-    @AutoConfigureMybatis
-    @DatabaseRiderTest
-    @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     @DataSet("dentaira/cobaco/server/file/infra/JdbcFileRepositoryTest-data/SaveTest/setup-save.yml")
     @DisplayName("saveはStoredFileを登録する")
     class SaveTest {
@@ -265,10 +245,6 @@ class JdbcFileRepositoryTest {
     }
 
     @Nested
-    @JdbcTest
-    @AutoConfigureMybatis
-    @DatabaseRiderTest
-    @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     @DataSet("dentaira/cobaco/server/file/infra/JdbcFileRepositoryTest-data/DeleteTest/setup-delete.yml")
     @DisplayName("deleteはStoredFileを削除する")
     class DeleteTest {

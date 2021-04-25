@@ -37,9 +37,6 @@ class JdbcFileOwnershipRepositoryTest {
     }
 
     @Nested
-    @JdbcTest
-    @DatabaseRiderTest
-    @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     @DataSet("dentaira/cobaco/server/file/infra/JdbcFileOwnershipRepositoryTest-data/setup-create.yml")
     @DisplayName("createはFileOwnershipを登録する")
     class CreateTest {
