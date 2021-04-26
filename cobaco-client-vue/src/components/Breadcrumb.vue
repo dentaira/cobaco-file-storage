@@ -25,8 +25,8 @@
 <style>
 /* パンくずリスト */
 .breadcrumb {
-  min-height: 80px;
   margin-bottom: 20px;
+  min-height: 80px;
 }
 .breadcrumb ol {
   list-style-type: none;
@@ -34,12 +34,12 @@
   padding: 0;
 }
 .breadcrumb li {
-  font-size: 1.4rem;
   display: inline;
+  font-size: 1.4rem;
 }
 .breadcrumb li::after {
-  content: "/";
   color: #999;
+  content: "/";
   margin: 0 7px;
 }
 .breadcrumb li:last-child::after {

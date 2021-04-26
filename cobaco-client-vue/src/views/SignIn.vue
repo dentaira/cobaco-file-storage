@@ -21,26 +21,26 @@
 }
 .sigInForm,
 input {
-  width: 100%;
   height: 40px;
   margin: 10px auto;
   outline: none;
+  width: 100%;
 }
 .logo {
   width: 210px;
 }
 .button {
-  display: inline-block;
-  width: 100%;
-  height: 45px;
-  border-radius: 4px;
   background-color: #007bff;
   border: 0;
+  border-radius: 4px;
   color: #fff;
+  display: inline-block;
   font-size: 1.2rem;
+  height: 45px;
   margin: 10px auto;
   text-align: center;
   text-decoration: none;
+  width: 100%;
 }
 .button:hover,
 .button:focus {
@@ -51,11 +51,15 @@ input {
 
 <script lang="ts">
 import { profileMockData, profileStore } from "@/store/profile";
-import { defineComponent } from "vue";
+import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
+    const state = reactive({
+      username: null as string | null,
+      password: null as string | null,
+    })
     const router = useRouter();
 
     const signIn = () => {

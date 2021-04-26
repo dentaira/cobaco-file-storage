@@ -13,9 +13,9 @@
 
 <style>
 .header-inner {
+  align-items: center;
   display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 .header-logo {
   margin: 0;
