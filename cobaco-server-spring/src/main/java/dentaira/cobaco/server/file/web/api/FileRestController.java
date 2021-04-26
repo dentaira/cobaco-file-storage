@@ -23,7 +23,7 @@ public class FileRestController {
         this.fileService = fileService;
     }
 
-    @GetMapping("api/root/{ownerId}")
+    @GetMapping("api/folder/root/{ownerId}")
     public FolderResource getRootFolder(@PathVariable String ownerId) {
         Owner owner = new Owner(UUID.fromString(ownerId));
 
