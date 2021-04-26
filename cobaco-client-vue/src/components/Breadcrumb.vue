@@ -6,7 +6,7 @@
           <li v-if="!isHome">
             <a href="#" @click="toHome">home</a>
           </li>
-          <template v-for="(id, index) in folder.ancestorsId" :key="index">
+          <template v-for="(id, index) in folder?.ancestorsId" :key="index">
             <li>
               <a href="#" @click="updateFolder(id)">{{
                 folder.ancestorsName[index]
@@ -14,7 +14,7 @@
             </li>
           </template>
           <li>
-            <span>{{ folder.name }}</span>
+            <span>{{ folder?.name }}</span>
           </li>
         </ol>
       </div>
@@ -57,6 +57,10 @@ export default defineComponent({
     folder: {
       type: Object as PropType<Folder>,
     },
+    isHome: {
+      type: Boolean,
+      required: true,
+    }
   },
 
   setup(props, context) {
@@ -64,10 +68,9 @@ export default defineComponent({
       folder: computed(() => {
         return props.folder;
       }),
-    });
-
-    const isHome = computed(() => {
-      return state.folder!.fileId === folderStore.home.fileId;
+      isHome: computed(() => {
+        return props.isHome;
+      })
     });
 
     const toHome = () => {
@@ -80,7 +83,6 @@ export default defineComponent({
 
     return {
       ...toRefs(state),
-      isHome,
       toHome,
       updateFolder,
     };

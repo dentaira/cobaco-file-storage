@@ -1,5 +1,5 @@
 <template>
-  <Breadcrumb :folder="folder" @folderId="updateFolder" @toHomeEvent="toHome" />
+  <Breadcrumb :folder="folder" :isHome="isHome" @folderId="updateFolder" @toHomeEvent="toHome" />
   <section>
     <div class="container">
       <main class="main">
@@ -53,7 +53,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="file in folder.children" :key="file.name">
+              <tr v-for="file in folder?.children" :key="file.name">
                 <td>
                   <div class="float-clear">
                     <div class="file-icon" v-bind:file-type="file.type" />
@@ -83,23 +83,23 @@
 <style>
 /* アクションツールバー */
 .action-toolbar button {
-  margin-right: 20px;
-  min-height: 40px;
-  background-size: 20px 20px;
   background-position-x: 10px;
   background-position-y: center;
+  background-size: 20px 20px;
+  border: none;
+  color: #fff;
+  margin-right: 20px;
+  min-height: 40px;
+  outline: none;
   padding-left: 34px;
   padding-right: 12px;
-  border: none;
-  outline: none;
-  color: #fff;
 }
 #uploadFile {
   display: none;
 }
 .upload-button {
-  float: left;
   background: url(../assets/upload.png) no-repeat mediumaquamarine;
+  float: left;
 }
 .upload-button:hover,
 .upload-button:focus,
@@ -149,26 +149,40 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, toRefs } from "vue";
-import { folderStore } from "@/store/folder";
-import { Folder } from '@/store/folder.model';
+import { folderStore, fetchFolder, fetchRoot } from "@/store/folder";
+import { Folder } from "@/store/folder.model";
 import BreadcrumbComponent from "@/components/Breadcrumb.vue";
 
 export default defineComponent({
   setup() {
     const state = reactive({
-      folder: folderStore.home,
+      folder: null as Folder | null,
+      isHome: true,
     });
 
-    const updateFolder = (fileId: string) => {
-      console.log(fileId);
-      state.folder = folderStore.get(fileId);
+    const updateFolder = async (fileId: string) => {
+      // eslint-disable-next-line no-useless-catch
+      try {
+        state.folder = await fetchFolder(fileId);
+      } catch (error) {
+        throw error;
+      }
+      state.isHome = false;
     };
 
-    const toHome = () => {
-      state.folder = folderStore.home;
+    const toHome = async () => {
+      // eslint-disable-next-line no-useless-catch
+      try {
+        state.folder = await fetchRoot();
+      } catch (error) {
+        throw error;
+      }
+      state.isHome = true;
     };
 
-    return {
+    toHome();
+
+    return {  
       ...toRefs(state),
       updateFolder,
       toHome,
