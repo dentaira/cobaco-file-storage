@@ -28,6 +28,7 @@
 import { computed, defineComponent, reactive, toRefs } from "vue";
 import { profileMockData, profileStore } from "@/store/profile";
 import { useRouter } from "vue-router";
+import { signOutAsync } from '@/store/profile';
 
 export default defineComponent({
   setup(prop, context) {
@@ -39,7 +40,13 @@ export default defineComponent({
 
     const router = useRouter();
     
-    const signOut = () => {
+    const signOut = async () => {
+      // eslint-disable-next-line no-useless-catch
+      try {
+        await signOutAsync();
+      } catch (error) {
+        console.log(error);
+      }
       profileStore.profile = null;
       router.push("/sign-in");
     };
