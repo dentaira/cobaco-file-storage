@@ -6,10 +6,10 @@
           <li v-if="!isHome">
             <a href="#" @click="toHome">home</a>
           </li>
-          <template v-for="(id, index) in folder?.ancestorsId" :key="index">
+          <template v-for="(id, index) in folder?.ancestorIds" :key="index">
             <li>
               <a href="#" @click="updateFolder(id)">{{
-                folder.ancestorsName[index]
+                folder.ancestorNames[index]
               }}</a>
             </li>
           </template>
