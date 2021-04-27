@@ -40,8 +40,9 @@ public class FileRestController {
 
         StoredFile folder = fileService.findById(fileId, owner);
         List<StoredFile> children = fileService.search(fileId, owner);
+        List<StoredFile> ancestors = fileService.findAncestors(fileId, owner);
 
         List<FileResource> fileResources = children.stream().map(FileResource::of).collect(Collectors.toList());
-        return FolderResource.of(folder, fileResources);
+        return FolderResource.of(folder, fileResources, ancestors);
     }
 }
