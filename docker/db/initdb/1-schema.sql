@@ -1,5 +1,3 @@
-\c cobaco docker
-
 CREATE TYPE file_type AS ENUM ('FILE', 'DIRECTORY');
 
 CREATE TABLE IF NOT EXISTS file (
