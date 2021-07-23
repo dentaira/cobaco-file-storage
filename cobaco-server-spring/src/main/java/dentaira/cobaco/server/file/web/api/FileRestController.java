@@ -23,9 +23,8 @@ public class FileRestController {
         this.fileService = fileService;
     }
 
-    @GetMapping("api/folder/root/{ownerId}")
-    public FolderResource getRootFolder(@PathVariable String ownerId) {
-        Owner owner = new Owner(UUID.fromString(ownerId));
+    @GetMapping("api/folder/root")
+    public FolderResource getRootFolder(Owner owner) {
 
         List<StoredFile> children = fileService.searchRoot(owner);
         StoredFile root = new StoredFile(UUID.randomUUID(), "home", Path.of("/"), FileType.DIRECTORY, DataSize.of(0L));
@@ -34,9 +33,8 @@ public class FileRestController {
         return FolderResource.of(root, fileResources);
     }
 
-    @GetMapping("api/folder/{fileId}/{ownerId}")
-    public FolderResource getFolder(@PathVariable String fileId, @PathVariable String ownerId) {
-        Owner owner = new Owner(UUID.fromString(ownerId));
+    @GetMapping("api/folder/{fileId}")
+    public FolderResource getFolder(@PathVariable String fileId, Owner owner) {
 
         StoredFile folder = fileService.findById(fileId, owner);
         List<StoredFile> children = fileService.search(fileId, owner);
