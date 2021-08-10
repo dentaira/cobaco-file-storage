@@ -5,10 +5,12 @@ import dentaira.cobaco.server.file.FileType;
 import dentaira.cobaco.server.file.Owner;
 import dentaira.cobaco.server.file.StoredFile;
 import dentaira.cobaco.server.file.app.FileService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
@@ -42,5 +44,32 @@ public class FileRestController {
 
         List<FileResource> fileResources = children.stream().map(FileResource::of).collect(Collectors.toList());
         return FolderResource.of(folder, fileResources, ancestors);
+    }
+
+    @PostMapping("api/file/upload/{parentId}")
+    public FileResource upload(@RequestParam MultipartFile uploadFile, @PathVariable String parentId, Owner owner) {
+
+        try (InputStream in = uploadFile.getInputStream()) {
+
+            UUID fileId = fileService.generateId();
+            StoredFile parent = fileService.findById(parentId, owner);
+
+            var file = new StoredFile(
+                    fileId,
+                    uploadFile.getOriginalFilename(),
+                    parent.getPath().resolve(fileId.toString()),
+                    FileType.FILE,
+                    DataSize.of(uploadFile.getSize())
+            );
+            file.setContent(in);
+
+            fileService.save(file, owner);
+
+            return FileResource.of(file);
+
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
     }
 }

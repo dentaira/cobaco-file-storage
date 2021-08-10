@@ -3,13 +3,10 @@ package dentaira.cobaco.server.file.app;
 import dentaira.cobaco.server.file.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FileService {
@@ -24,6 +21,11 @@ public class FileService {
     }
 
     @Transactional(readOnly = true)
+    public StoredFile findById(String fileId, Owner owner) {
+        return fileRepository.findById(fileId, owner);
+    }
+
+    @Transactional(readOnly = true)
     public List<StoredFile> searchRoot(Owner owner) {
         return fileRepository.searchRoot(owner);
     }
@@ -34,31 +36,14 @@ public class FileService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void register(MultipartFile multipartFile, Path parentPath, Owner owner) {
-        // TODO MultipartFileに依存しないようにする
-
-        try (InputStream in = multipartFile.getInputStream()) {
-            var fileId = fileRepository.generateId();
-            var file = new StoredFile(
-                    fileId,
-                    multipartFile.getOriginalFilename(),
-                    parentPath.resolve(fileId.toString()),
-                    FileType.FILE,
-                    DataSize.of(multipartFile.getSize())
-            );
-            file.setContent(in);
-
-            fileRepository.save(file);
-            fileOwnershipRepository.create(fileId, owner.getId(), "READ_AND_WRITE");
-
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    public void save(StoredFile file, Owner owner) {
+        fileRepository.save(file);
+        fileOwnershipRepository.create(file.getId(), owner.getId(), "READ_AND_WRITE");
     }
 
     @Transactional(readOnly = true)
-    public StoredFile findById(String fileId, Owner owner) {
-        return fileRepository.findById(fileId, owner);
+    public UUID generateId() {
+        return fileRepository.generateId();
     }
 
     @Transactional(rollbackFor = Exception.class)
