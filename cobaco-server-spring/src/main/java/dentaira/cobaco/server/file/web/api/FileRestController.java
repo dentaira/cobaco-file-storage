@@ -5,12 +5,17 @@ import dentaira.cobaco.server.file.FileType;
 import dentaira.cobaco.server.file.Owner;
 import dentaira.cobaco.server.file.StoredFile;
 import dentaira.cobaco.server.file.app.FileService;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
@@ -44,6 +49,16 @@ public class FileRestController {
 
         List<FileResource> fileResources = children.stream().map(FileResource::of).collect(Collectors.toList());
         return FolderResource.of(folder, fileResources, ancestors);
+    }
+
+    @GetMapping("api/file/download/{fileId}")
+    public Resource downloadFile(@PathVariable String fileId, Owner owner, HttpServletResponse response) {
+
+        StoredFile file = fileService.findContentById(fileId, owner);
+
+        String filename = URLEncoder.encode(file.getName(), StandardCharsets.UTF_8);
+        response.setHeader("Content-Disposition", "attachment;filename=" + filename);
+        return new InputStreamResource(file.getContent());
     }
 
     @PostMapping("api/file/upload/{parentId}")

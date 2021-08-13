@@ -5,6 +5,7 @@ import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.sql.Types;
 import java.util.*;
@@ -80,6 +81,11 @@ public class JdbcFileRepository implements FileRepository {
     @Override
     public StoredFile findById(String id, Owner owner) {
         return fileMapper.findById(id, owner);
+    }
+
+    @Override
+    public InputStream findContentById(String id, Owner owner) {
+        return fileMapper.findContentById(id, owner);
     }
 
     @Override

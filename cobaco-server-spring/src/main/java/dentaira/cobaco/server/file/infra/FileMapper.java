@@ -24,11 +24,18 @@ public interface FileMapper {
             @Result(property = "size", column = "size", jdbcType = JdbcType.BIGINT, typeHandler = DataSizeTypeHandler.class),
     })
     @Select({"SELECT id, name, path, type, size",
-            "FROM file WHERE LOWER(id) = LOWER(#{id})",
+            "FROM file",
+            "WHERE LOWER(id) = LOWER(#{id})",
             "AND id IN(SELECT file_id FROM file_ownership",
-            "WHERE owned_at = #{owner.id})"})
+            "WHERE owned_at = #{owner.id})"
+    })
     public StoredFile findById(@Param("id") String id, @Param("owner") Owner owner);
 
-    @Select("SELECT content FROM file WHERE id = #{id}")
-    public InputStream findContentById(@Param("id") String id);
+    @Select({"SELECT content",
+            "FROM file",
+            "WHERE LOWER(id) = LOWER(#{id})",
+            "AND id IN(SELECT file_id FROM file_ownership",
+            "WHERE owned_at = #{owner.id})"
+    })
+    public InputStream findContentById(@Param("id") String id, @Param("owner") Owner owner);
 }
