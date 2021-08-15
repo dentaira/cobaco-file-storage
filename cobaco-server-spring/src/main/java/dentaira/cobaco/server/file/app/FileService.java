@@ -35,13 +35,6 @@ public class FileService {
         return fileRepository.search(parentId, owner);
     }
 
-    @Transactional(readOnly = true)
-    public StoredFile findContentById(String fileId, Owner owner) {
-        var file = findById(fileId, owner);
-        file.setContent(fileRepository.findContentById(fileId, owner));
-        return file;
-    }
-
     @Transactional(rollbackFor = Exception.class)
     public void save(StoredFile file, Owner owner) {
         fileRepository.save(file);

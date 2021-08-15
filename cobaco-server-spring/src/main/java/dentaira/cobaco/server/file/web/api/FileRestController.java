@@ -54,7 +54,7 @@ public class FileRestController {
     @GetMapping("api/file/download/{fileId}")
     public Resource downloadFile(@PathVariable String fileId, Owner owner, HttpServletResponse response) {
 
-        StoredFile file = fileService.findContentById(fileId, owner);
+        StoredFile file = fileService.findById(fileId, owner);
 
         String filename = URLEncoder.encode(file.getName(), StandardCharsets.UTF_8);
         response.setHeader("Content-Disposition", "attachment;filename=" + filename);
@@ -85,6 +85,5 @@ public class FileRestController {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-
     }
 }

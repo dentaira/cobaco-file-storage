@@ -84,11 +84,6 @@ public class JdbcFileRepository implements FileRepository {
     }
 
     @Override
-    public InputStream findContentById(String id, Owner owner) {
-        return fileMapper.findContentById(id, owner);
-    }
-
-    @Override
     public List<StoredFile> searchForAncestors(StoredFile file) {
 
         if (file.getPath().getParent().equals(ROOT_PATH)) {

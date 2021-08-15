@@ -31,11 +31,16 @@ public interface FileMapper {
     })
     public StoredFile findById(@Param("id") String id, @Param("owner") Owner owner);
 
+    /**
+     * content を取得する。
+     * <p>
+     *     Lazy Loading 用に定義。
+     * </p>
+     */
+    @Deprecated
     @Select({"SELECT content",
             "FROM file",
-            "WHERE LOWER(id) = LOWER(#{id})",
-            "AND id IN(SELECT file_id FROM file_ownership",
-            "WHERE owned_at = #{owner.id})"
+            "WHERE LOWER(id) = LOWER(#{id})"
     })
-    public InputStream findContentById(@Param("id") String id, @Param("owner") Owner owner);
+    public InputStream findContentById(@Param("id") String id);
 }
