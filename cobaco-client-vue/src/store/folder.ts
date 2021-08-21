@@ -71,7 +71,7 @@ export const folderStore = reactive({
 export const fetchFolder = async (fileId: string): Promise<Folder> => {
     // eslint-disable-next-line no-useless-catch
     try {
-        const response = await axios.get<Folder>('folder/' + fileId + '/' + '26a8609c-ea48-4eae-872e-acc2b9625dd3');
+        const response = await axios.get<Folder>('folder/' + fileId);
         return response.data;
     } catch (error) {
         throw error;
@@ -81,7 +81,7 @@ export const fetchFolder = async (fileId: string): Promise<Folder> => {
 export const fetchRoot = async (): Promise<Folder> => {
         // eslint-disable-next-line no-useless-catch
         try {
-            const response = await axios.get<Folder>('folder/root/' + '26a8609c-ea48-4eae-872e-acc2b9625dd3');
+            const response = await axios.get<Folder>('folder/root/');
             return response.data;
         } catch (error) {
             throw error;
