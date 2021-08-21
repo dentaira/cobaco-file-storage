@@ -92,4 +92,9 @@ public class FileRestController {
     public void createFolder(@PathVariable String name, @RequestParam(required = false) String parentId, Owner owner) {
         fileService.createFolder(name, parentId, owner);
     }
+
+    @PostMapping("api/delete/{fileId}")
+    public void delete(@PathVariable String fileId, Owner owner) {
+        fileService.delete(fileId, owner);
+    }
 }
