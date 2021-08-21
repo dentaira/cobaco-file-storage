@@ -1,6 +1,5 @@
 package dentaira.cobaco.server.file;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
