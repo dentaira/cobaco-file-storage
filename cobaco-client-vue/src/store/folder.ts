@@ -6,8 +6,8 @@ const folderMockData: Folder[] = [
     {
         fileId: '66006b29-727e-4ed8-a3c8-95d4438fd001',
         name: 'フォルダ1',
-        ancestorsId: [],
-        ancestorsName: [],
+        ancestorIds: [],
+        ancestorNames: [],
         children: [
             {
                 fileId: '66006b29-727e-4ed8-a3c8-95d4438f00a1',
@@ -32,8 +32,8 @@ const folderMockData: Folder[] = [
     {
         fileId: '66006b29-727e-4ed8-a3c8-95d4438f00d2',
         name: 'フォルダ2',
-        ancestorsId: ['66006b29-727e-4ed8-a3c8-95d4438fd001'],
-        ancestorsName: ['フォルダ1'],
+        ancestorIds: ['66006b29-727e-4ed8-a3c8-95d4438fd001'],
+        ancestorNames: ['フォルダ1'],
         children: [
             {
                 fileId: '66006b29-727e-4ed8-a3c8-95d4438f00b1',
@@ -48,8 +48,8 @@ const folderMockData: Folder[] = [
 const homeFolder: Folder = {
     fileId: 'home',
     name: 'home',
-    ancestorsId: [],
-    ancestorsName: [],
+    ancestorIds: [],
+    ancestorNames: [],
     children: [
         {
             fileId: '66006b29-727e-4ed8-a3c8-95d4438fd001',
