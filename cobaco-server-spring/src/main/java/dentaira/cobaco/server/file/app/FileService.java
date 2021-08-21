@@ -41,15 +41,20 @@ public class FileService {
         fileOwnershipRepository.create(file.getId(), owner.getId(), "READ_AND_WRITE");
     }
 
-    @Transactional(readOnly = true)
-    public UUID generateId() {
-        return fileRepository.generateId();
-    }
-
     @Transactional(rollbackFor = Exception.class)
-    public void createDirectory(String name, Path parentPath, Owner owner) {
-        var fileId = fileRepository.generateId();
-        var file = new StoredFile(
+    public StoredFile createFolder(String name, String parentId, Owner owner) {
+
+        UUID fileId = generateId();
+
+        Path parentPath;
+        if (parentId == null) {
+            parentPath = Path.of("/");
+        } else {
+            StoredFile parent = findById(parentId, owner);
+            parentPath = parent.getPath();
+        }
+
+        var folder = new StoredFile(
                 fileId,
                 name,
                 parentPath.resolve(fileId.toString()),
@@ -57,8 +62,14 @@ public class FileService {
                 DataSize.of(0L)
         );
 
-        fileRepository.save(file);
-        fileOwnershipRepository.create(fileId, owner.getId(), "READ_AND_WRITE");
+        save(folder, owner);
+
+        return folder;
+    }
+
+    @Transactional(readOnly = true)
+    public UUID generateId() {
+        return fileRepository.generateId();
     }
 
     @Transactional(rollbackFor = Exception.class)

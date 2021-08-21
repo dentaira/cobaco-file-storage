@@ -85,5 +85,11 @@ public class FileRestController {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+
+    }
+
+    @PostMapping("api/folder/create/{name}")
+    public void createFolder(@PathVariable String name, @RequestParam(required = false) String parentId, Owner owner) {
+        fileService.createFolder(name, parentId, owner);
     }
 }
