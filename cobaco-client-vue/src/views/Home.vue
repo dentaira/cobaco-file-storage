@@ -57,7 +57,10 @@
                 <td>
                   <div class="float-clear">
                     <div class="file-icon" v-bind:file-type="file.type" />
-                    <a href="#" @click="updateFolder(file.fileId)">{{
+                    <a href="#" @click="updateFolder(file.fileId)" v-if="file.type === 'DIRECTORY'">{{
+                      file.name
+                    }}</a>
+                    <a href="#" @click="download(file.fileId)" v-else>{{
                       file.name
                     }}</a>
                   </div>
@@ -75,6 +78,7 @@
           </table>
           <form name="deleteForm" action="/file/delete/" method="POST" />
         </div>
+        <a id="download-link" v-bind:href="downloadUrl" v-bind:download="fileName">Link</a>
       </main>
     </div>
   </section>
@@ -145,11 +149,16 @@
 .file-size-text {
   font-size: 0.9rem;
 }
+
+  #download-link {
+    display: none;
+  }
 </style>
 
 <script lang="ts">
 import { defineComponent, reactive, computed, toRefs } from "vue";
 import { folderStore, fetchFolder, fetchRoot } from "@/store/folder";
+import { downloadFile } from "@/store/file";
 import { Folder } from "@/store/folder.model";
 import BreadcrumbComponent from "@/components/Breadcrumb.vue";
 
@@ -158,6 +167,8 @@ export default defineComponent({
     const state = reactive({
       folder: null as Folder | null,
       isHome: true,
+      downloadUrl: null as string | null,
+      fileName: ''
     });
 
     const updateFolder = async (fileId: string) => {
@@ -168,6 +179,21 @@ export default defineComponent({
         throw error;
       }
       state.isHome = false;
+    };
+
+    const download = async (fileId: string) => {
+      // eslint-disable-next-line no-useless-catch
+      try {
+        const file = await downloadFile(fileId);
+        const fileURL = window.URL.createObjectURL(file[0]);
+        state.downloadUrl = fileURL;
+        state.fileName = file[1];
+        setTimeout(() => {
+          window.document.getElementById('download-link')?.click();
+        }, 10);
+      } catch (error) {
+        throw error;
+      }
     };
 
     const toHome = async () => {
@@ -182,10 +208,11 @@ export default defineComponent({
 
     toHome();
 
-    return {  
+    return {
       ...toRefs(state),
       updateFolder,
       toHome,
+      download,
     };
   },
 
