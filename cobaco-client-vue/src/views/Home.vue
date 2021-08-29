@@ -4,25 +4,18 @@
     <div class="container">
       <main class="main">
         <div class="action-toolbar float-clear">
-          <form
-            name="uploadForm"
-            action="/file/upload/"
-            enctype="multipart/form-data"
-            method="POST"
+          <button
+            class="upload-button"
+            onclick="document.getElementById('uploadFile').click(); return false"
           >
-            <button
-              class="upload-button"
-              onclick="clickFile('uploadFile'); return false"
-            >
-              ファイルをアップロード
-            </button>
-            <input
-              type="file"
-              id="uploadFile"
-              onchange="submitUpload()"
-              class="upload-button"
-            />
-          </form>
+            ファイルをアップロード
+          </button>
+          <input
+            type="file"
+            id="uploadFile"
+            v-on:change="upload"
+            class="upload-button"
+          />
           <form
             name="createDirForm"
             action="/file/create/directory/"
@@ -158,7 +151,7 @@
 <script lang="ts">
 import { defineComponent, reactive, computed, toRefs } from "vue";
 import { folderStore, fetchFolder, fetchRoot } from "@/store/folder";
-import { downloadFile } from "@/store/file";
+import { downloadFile, uploadFile } from "@/store/file";
 import { Folder } from "@/store/folder.model";
 import BreadcrumbComponent from "@/components/Breadcrumb.vue";
 
@@ -196,6 +189,30 @@ export default defineComponent({
       }
     };
 
+    const upload = async (event: Event) => {
+      if (!(event.target instanceof HTMLInputElement)) {
+        console.error('unexpected event');
+        return;
+      }
+
+      const file = event.target.files![0];
+
+      // eslint-disable-next-line no-useless-catch
+      try {
+        await uploadFile(file, state.folder!, state.isHome);
+      } catch (error) {
+        throw error;
+      }
+
+      // TODO 2回通信していて無駄
+      // フォルダを更新
+      if (state.isHome) {
+        toHome();
+      } else {
+        updateFolder(state.folder!.fileId);
+      }
+    }
+
     const toHome = async () => {
       // eslint-disable-next-line no-useless-catch
       try {
@@ -213,6 +230,7 @@ export default defineComponent({
       updateFolder,
       toHome,
       download,
+      upload,
     };
   },
 
