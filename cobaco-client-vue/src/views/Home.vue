@@ -211,6 +211,9 @@ export default defineComponent({
       } else {
         updateFolder(state.folder!.fileId);
       }
+
+      // input の値をクリア
+      event.target.value = '';
     }
 
     const toHome = async () => {
