@@ -26,3 +26,12 @@ export const uploadFile = async (file: File, parent: Folder, isRoot: boolean) =>
         throw error;
     }
 }
+
+export const deleteFile = async (fileId: string) => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+        await axios.post('file/delete/' + fileId);
+    } catch (error) {
+        throw error;
+    }
+}

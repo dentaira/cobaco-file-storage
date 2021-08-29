@@ -64,7 +64,7 @@
                   }}</span>
                 </td>
                 <td>
-                  <a name="delete" href="#" data-id="storedFile.id">削除</a>
+                  <a name="delete" href="#" @click="remove(file.fileId)">削除</a>
                 </td>
               </tr>
             </tbody>
@@ -151,7 +151,7 @@
 <script lang="ts">
 import { defineComponent, reactive, computed, toRefs } from "vue";
 import { folderStore, fetchFolder, fetchRoot } from "@/store/folder";
-import { downloadFile, uploadFile } from "@/store/file";
+import { downloadFile, uploadFile, deleteFile } from "@/store/file";
 import { Folder } from "@/store/folder.model";
 import BreadcrumbComponent from "@/components/Breadcrumb.vue";
 
@@ -214,7 +214,24 @@ export default defineComponent({
 
       // input の値をクリア
       event.target.value = '';
-    }
+    };
+
+    const remove = async (fileId: string) => {
+      // eslint-disable-next-line no-useless-catch
+      try {
+        await deleteFile(fileId);
+      } catch (error) {
+        throw error;
+      }
+
+      // TODO 2回通信していて無駄
+      // フォルダを更新
+      if (state.isHome) {
+        toHome();
+      } else {
+        updateFolder(state.folder!.fileId);
+      }
+    };
 
     const toHome = async () => {
       // eslint-disable-next-line no-useless-catch
@@ -234,6 +251,7 @@ export default defineComponent({
       toHome,
       download,
       upload,
+      remove
     };
   },
 
