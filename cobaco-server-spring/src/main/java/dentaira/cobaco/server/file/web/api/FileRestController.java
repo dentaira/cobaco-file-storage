@@ -61,18 +61,26 @@ public class FileRestController {
         return new InputStreamResource(file.getContent());
     }
 
-    @PostMapping("api/file/upload/{parentId}")
-    public FileResource upload(@RequestParam MultipartFile uploadFile, @PathVariable String parentId, Owner owner) {
+    @PostMapping("api/file/upload")
+    public FileResource upload(@RequestParam MultipartFile uploadFile, @RequestParam(required = false) String parentId, Owner owner) {
+
+        UUID fileId = fileService.generateId();
+
+        Path path = null;
+        if (parentId != null) {
+            StoredFile parent = fileService.findById(parentId, owner);
+            path = parent.getPath().resolve(fileId.toString());
+        } else {
+            path = Path.of("/").resolve(fileId.toString());
+        }
 
         try (InputStream in = uploadFile.getInputStream()) {
 
-            UUID fileId = fileService.generateId();
-            StoredFile parent = fileService.findById(parentId, owner);
 
             var file = new StoredFile(
                     fileId,
                     uploadFile.getOriginalFilename(),
-                    parent.getPath().resolve(fileId.toString()),
+                    path,
                     FileType.FILE,
                     DataSize.of(uploadFile.getSize())
             );
