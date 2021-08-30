@@ -16,25 +16,12 @@
             v-on:change="upload"
             class="upload-button"
           />
-          <form
-            name="createDirForm"
-            action="/file/create/directory/"
-            method="POST"
+          <button
+            @click="addFolder"
+            class="create-button"
           >
-            <button
-              onclick="clickFile('createDirName'); return false"
-              class="create-button"
-            >
-              フォルダを作成
-            </button>
-            <input
-              type="text"
-              style="display: none"
-              onclick="submitCreateDir()"
-              id="createDirName"
-              name="createDirName"
-            />
-          </form>
+            フォルダを作成
+          </button>
         </div>
         <div>
           <table class="file-table">
@@ -150,7 +137,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, toRefs } from "vue";
-import { folderStore, fetchFolder, fetchRoot } from "@/store/folder";
+import { folderStore, fetchFolder, fetchRoot, createFolder } from "@/store/folder";
 import { downloadFile, uploadFile, deleteFile } from "@/store/file";
 import { Folder } from "@/store/folder.model";
 import BreadcrumbComponent from "@/components/Breadcrumb.vue";
@@ -204,7 +191,7 @@ export default defineComponent({
         throw error;
       }
 
-      // TODO 2回通信していて無駄
+      // TODO リクエストを１回にする？
       // フォルダを更新
       if (state.isHome) {
         toHome();
@@ -220,6 +207,28 @@ export default defineComponent({
       // eslint-disable-next-line no-useless-catch
       try {
         await deleteFile(fileId);
+      } catch (error) {
+        throw error;
+      }
+
+      // TODO リクエストを１回にする？
+      // フォルダを更新
+      if (state.isHome) {
+        toHome();
+      } else {
+        updateFolder(state.folder!.fileId);
+      }
+    };
+
+    const addFolder = async() => {
+      const name = prompt("追加するフォルダの名前を入力してください。");
+      if (name === null) {
+          return;
+      }
+
+      // eslint-disable-next-line no-useless-catch
+      try {
+        await createFolder(name, state.folder!, state.isHome);
       } catch (error) {
         throw error;
       }
@@ -251,7 +260,8 @@ export default defineComponent({
       toHome,
       download,
       upload,
-      remove
+      remove,
+      addFolder
     };
   },
 
