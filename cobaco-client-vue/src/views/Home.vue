@@ -137,7 +137,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, toRefs } from "vue";
-import { folderStore, fetchFolder, fetchRoot, createFolder } from "@/store/folder";
+import { fetchFolder, fetchRoot, createFolder } from "@/store/folder";
 import { downloadFile, uploadFile, deleteFile } from "@/store/file";
 import { Folder } from "@/store/folder.model";
 import BreadcrumbComponent from "@/components/Breadcrumb.vue";

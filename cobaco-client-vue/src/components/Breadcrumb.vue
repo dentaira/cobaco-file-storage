@@ -50,7 +50,6 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, reactive, toRefs } from "vue";
 import { Folder } from "@/store/folder.model";
-import { folderStore } from "@/store/folder";
 
 export default defineComponent({
   props: {
