@@ -1,21 +1,32 @@
 import { Profile } from "@/store/profile.model";
 import { reactive } from "@vue/reactivity";
-import axios from 'axios';
+import axios, { AxiosBasicCredentials } from 'axios';
 
-export const profileMockData: Profile = {
-  userId: "66006b29-727e-4ed8-a3c8-95d4438f66d4",
-  userName: "namihei",
-  email: "local@domain.com",
-  role: "user", 
-};
+export const profileStore = reactive({ 
+  profile: null as Profile | null
+ });
 
-export const profileStore = reactive({ profile: null as Profile | null });
+export const signInAsync = async (username: string, password: string): Promise<Profile> => {
+  const credentials: AxiosBasicCredentials = {
+    username: username,
+    password: password
+  };
+
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const response = await axios.post<Profile>('sign-in', null, { auth: credentials });
+    axios.defaults.auth = credentials;
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 
 export const signOutAsync = async () => {
   // eslint-disable-next-line no-useless-catch
   try {
-      const response = await axios.post('sign-out');
+    const response = await axios.post('sign-out');
   } catch (error) {
-      throw error;
+    throw error;
   }
 }

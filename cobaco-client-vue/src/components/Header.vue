@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from "vue";
-import { profileMockData, profileStore } from "@/store/profile";
+import { profileStore } from "@/store/profile";
 import { useRouter } from "vue-router";
 import { signOutAsync } from '@/store/profile';
 

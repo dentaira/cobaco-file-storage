@@ -1,11 +1,11 @@
 <template>
   <section class="signInArea">
-    <form class="signInForm">
+    <div class="signInForm">
       <img src="@/assets/logo.png" class="logo" alt="Cobaco" />
-      <input v-on="username" placeholder="Username" />
-      <input v-on="password" placeholder="Password" />
+      <input v-model="username" placeholder="Username" />
+      <input v-model="password" placeholder="Password" />
       <button class="button" href="#" @click="signIn">Sign in</button>
-    </form>
+    </div>
   </section>
 </template>
 
@@ -50,8 +50,8 @@ input {
 </style>
 
 <script lang="ts">
-import { profileMockData, profileStore } from "@/store/profile";
-import { defineComponent, reactive } from "vue";
+import { profileStore, signInAsync } from "@/store/profile";
+import { defineComponent, reactive, toRefs } from "vue";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -62,12 +62,29 @@ export default defineComponent({
     })
     const router = useRouter();
 
-    const signIn = () => {
-      profileStore.profile = profileMockData;
+    const signIn = async () => {
+      if (state.username === null) {
+        console.info(state.username);
+        console.error('ユーザー名を入力してください。');
+        return;
+      }
+      if (state.password === null) {
+        console.error('パスワードを入力してください。');
+        return;
+      }
+
+      // eslint-disable-next-line no-useless-catch
+      try {
+        profileStore.profile =  await signInAsync(state.username!, state.password!);
+      } catch (error) {
+        throw error;
+      }
+
       router.push("/home");
     };
 
     return {
+      ...toRefs(state),
       signIn,
     };
   },
