@@ -23,10 +23,6 @@ export const signInAsync = async (username: string, password: string): Promise<P
 }
 
 export const signOutAsync = async () => {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    const response = await axios.post('sign-out');
-  } catch (error) {
-    throw error;
-  }
+  profileStore.profile = null;
+  axios.defaults.auth = undefined;
 }

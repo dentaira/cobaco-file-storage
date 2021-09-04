@@ -47,7 +47,6 @@ export default defineComponent({
       } catch (error) {
         console.log(error);
       }
-      profileStore.profile = null;
       router.push("/sign-in");
     };
 
