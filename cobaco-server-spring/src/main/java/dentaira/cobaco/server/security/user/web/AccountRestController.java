@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AccountRestController {
 
-    @PostMapping("api/sign-in")
+    @PostMapping("api/sign-in/account")
     public AccountResource signIn(@AuthenticationPrincipal AccountUserDetails account) {
         return AccountResource.of(account.getAccount());
     }

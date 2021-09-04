@@ -14,7 +14,7 @@ export const signInAsync = async (username: string, password: string): Promise<P
 
   // eslint-disable-next-line no-useless-catch
   try {
-    const response = await axios.post<Profile>('sign-in', null, { auth: credentials });
+    const response = await axios.post<Profile>('sign-in/account', null, { auth: credentials });
     axios.defaults.auth = credentials;
     return response.data;
   } catch (error) {
