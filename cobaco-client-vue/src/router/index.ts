@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "@/views/Home.vue";
 import SignIn from "@/views/SignIn.vue";
-import { profileStore } from "@/store/profile";
+import { profileStore, signOutAsync } from "@/store/profile";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -29,7 +29,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.path === "/sign-in") {
     // サインイン中にアクセスした場合はサインアウトする。
-    profileStore.profile = null;
+    signOutAsync();
     next();
     return;
   }
