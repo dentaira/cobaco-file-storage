@@ -20,21 +20,6 @@ public class FileService {
         this.fileOwnershipRepository = fileOwnershipRepository;
     }
 
-    @Transactional(readOnly = true)
-    public StoredFile findById(String fileId, Owner owner) {
-        return fileRepository.findById(fileId, owner);
-    }
-
-    @Transactional(readOnly = true)
-    public List<StoredFile> searchRoot(Owner owner) {
-        return fileRepository.searchRoot(owner);
-    }
-
-    @Transactional(readOnly = true)
-    public List<StoredFile> search(String parentId, Owner owner) {
-        return fileRepository.search(parentId, owner);
-    }
-
     @Transactional(rollbackFor = Exception.class)
     public void save(StoredFile file, Owner owner) {
         fileRepository.save(file);
@@ -44,13 +29,13 @@ public class FileService {
     @Transactional(rollbackFor = Exception.class)
     public StoredFile createFolder(String name, String parentId, Owner owner) {
 
-        UUID fileId = generateId();
+        UUID fileId = fileRepository.generateId();
 
         Path parentPath;
         if (parentId == null) {
             parentPath = Path.of("/");
         } else {
-            StoredFile parent = findById(parentId, owner);
+            StoredFile parent = fileRepository.findById(parentId, owner);
             parentPath = parent.getPath();
         }
 
@@ -67,20 +52,15 @@ public class FileService {
         return folder;
     }
 
-    @Transactional(readOnly = true)
-    public UUID generateId() {
-        return fileRepository.generateId();
-    }
-
     @Transactional(rollbackFor = Exception.class)
     public void delete(String fileId, Owner owner) {
-        StoredFile file = findById(fileId, owner);
+        StoredFile file = fileRepository.findById(fileId, owner);
         fileRepository.delete(file);
     }
 
     @Transactional(readOnly = true)
     public List<StoredFile> findAncestors(String fileId, Owner owner) {
-        var file = findById(fileId, owner);
+        var file = fileRepository.findById(fileId, owner);
         return fileRepository.searchForAncestors(file);
     }
 }

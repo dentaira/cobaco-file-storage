@@ -1,9 +1,6 @@
 package dentaira.cobaco.server.file.web.api;
 
-import dentaira.cobaco.server.file.DataSize;
-import dentaira.cobaco.server.file.FileType;
-import dentaira.cobaco.server.file.Owner;
-import dentaira.cobaco.server.file.StoredFile;
+import dentaira.cobaco.server.file.*;
 import dentaira.cobaco.server.file.app.FileService;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -26,14 +23,17 @@ public class FileRestController {
 
     private FileService fileService;
 
-    public FileRestController(FileService fileService) {
+    private FileRepository fileRepository;
+
+    public FileRestController(FileService fileService, FileRepository fileRepository) {
         this.fileService = fileService;
+        this.fileRepository = fileRepository;
     }
 
     @GetMapping("api/folder/root")
     public FolderResource getRootFolder(Owner owner) {
 
-        List<StoredFile> children = fileService.searchRoot(owner);
+        List<StoredFile> children = fileRepository.searchRoot(owner);
         StoredFile root = new StoredFile(UUID.randomUUID(), "home", Path.of("/"), FileType.DIRECTORY, DataSize.of(0L));
 
         List<FileResource> fileResources = children.stream().map(FileResource::of).collect(Collectors.toList());
@@ -43,8 +43,8 @@ public class FileRestController {
     @GetMapping("api/folder/{fileId}")
     public FolderResource getFolder(@PathVariable String fileId, Owner owner) {
 
-        StoredFile folder = fileService.findById(fileId, owner);
-        List<StoredFile> children = fileService.search(fileId, owner);
+        StoredFile folder = fileRepository.findById(fileId, owner);
+        List<StoredFile> children = fileRepository.search(fileId, owner);
         List<StoredFile> ancestors = fileService.findAncestors(fileId, owner);
 
         List<FileResource> fileResources = children.stream().map(FileResource::of).collect(Collectors.toList());
@@ -54,7 +54,7 @@ public class FileRestController {
     @GetMapping("api/file/download/{fileId}")
     public Resource downloadFile(@PathVariable String fileId, Owner owner, HttpServletResponse response) {
 
-        StoredFile file = fileService.findById(fileId, owner);
+        StoredFile file = fileRepository.findById(fileId, owner);
 
         String filename = URLEncoder.encode(file.getName(), StandardCharsets.UTF_8);
         response.setHeader("Content-Disposition", "attachment;filename=" + filename);
@@ -64,18 +64,17 @@ public class FileRestController {
     @PostMapping("api/file/upload")
     public FileResource upload(@RequestParam MultipartFile uploadFile, @RequestParam(required = false) String parentId, Owner owner) {
 
-        UUID fileId = fileService.generateId();
+        UUID fileId = fileRepository.generateId();
 
         Path path = null;
         if (parentId != null) {
-            StoredFile parent = fileService.findById(parentId, owner);
+            StoredFile parent = fileRepository.findById(parentId, owner);
             path = parent.getPath().resolve(fileId.toString());
         } else {
             path = Path.of("/").resolve(fileId.toString());
         }
 
         try (InputStream in = uploadFile.getInputStream()) {
-
 
             var file = new StoredFile(
                     fileId,
