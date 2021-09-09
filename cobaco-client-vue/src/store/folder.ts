@@ -15,7 +15,7 @@ export const fetchFolder = async (fileId: string): Promise<Folder> => {
 export const fetchRoot = async (): Promise<Folder> => {
         // eslint-disable-next-line no-useless-catch
         try {
-            const response = await axios.get<Folder>('folder/root/');
+            const response = await axios.get<Folder>('folder/root');
             return response.data;
         } catch (error) {
             throw error;
@@ -29,7 +29,7 @@ export const createFolder = async (name: string, parent: Folder, isRoot: boolean
     }
     // eslint-disable-next-line no-useless-catch
     try {
-        const response = await axios.post<Folder>('folder/create/' + name + '/' + param);
+        const response = await axios.put<Folder>('folder/' + name + '/' + param);
         return response.data;
     } catch (error) {
         throw error;

@@ -51,7 +51,7 @@ public class FileRestController {
         return FolderResource.of(folder, fileResources, ancestors);
     }
 
-    @GetMapping("api/file/download/{fileId}")
+    @GetMapping("api/file/{fileId}")
     public Resource downloadFile(@PathVariable String fileId, Owner owner, HttpServletResponse response) {
 
         StoredFile file = fileRepository.findById(fileId, owner);
@@ -61,7 +61,7 @@ public class FileRestController {
         return new InputStreamResource(file.getContent());
     }
 
-    @PostMapping("api/file/upload")
+    @PutMapping("api/file")
     public FileResource upload(@RequestParam MultipartFile uploadFile, @RequestParam(required = false) String parentId, Owner owner) {
 
         UUID fileId = fileRepository.generateId();
@@ -95,12 +95,12 @@ public class FileRestController {
 
     }
 
-    @PostMapping("api/folder/create/{name}")
+    @PutMapping("api/folder/{name}")
     public void createFolder(@PathVariable String name, @RequestParam(required = false) String parentId, Owner owner) {
         fileService.createFolder(name, parentId, owner);
     }
 
-    @PostMapping("api/file/delete/{fileId}")
+    @DeleteMapping("api/file/{fileId}")
     public void delete(@PathVariable String fileId, Owner owner) {
         fileService.delete(fileId, owner);
     }
