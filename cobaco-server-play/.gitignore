@@ -13,3 +13,7 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+
+.env
+
+docker/db/data
