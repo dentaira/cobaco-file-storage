@@ -1,7 +1,7 @@
 CREATE TYPE file_type AS ENUM ('FILE', 'DIRECTORY');
 
 CREATE TABLE IF NOT EXISTS file (
-    id CHAR(36),
+    id CHAR(36) PRIMARY KEY,
     name TEXT,
     path TEXT,
     type FILE_TYPE,
