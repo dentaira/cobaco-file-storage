@@ -2,3 +2,7 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
+GET        /file/:id        dentaira.cobaco.server.file.web.FileController.get(id)
+PUT        /file            dentaira.cobaco.server.file.web.FileController.put
+DELETE     /file/:id        dentaira.cobaco.server.file.web.FileController.delete(id)
+POST       /file            dentaira.cobaco.server.file.web.FileController.post

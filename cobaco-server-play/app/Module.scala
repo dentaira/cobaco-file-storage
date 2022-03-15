@@ -1,6 +1,8 @@
 import com.google.inject.AbstractModule
-import java.time.Clock
+import dentaira.cobaco.server.file.FileRepository
+import dentaira.cobaco.server.file.infra.FileRepositoryImpl
 
+import java.time.Clock
 import services.{ApplicationTimer, AtomicCounter, Counter}
 
 /**
@@ -23,6 +25,8 @@ class Module extends AbstractModule {
     bind(classOf[ApplicationTimer]).asEagerSingleton()
     // Set AtomicCounter as the implementation for Counter.
     bind(classOf[Counter]).to(classOf[AtomicCounter])
+
+    bind(classOf[FileRepository]).to(classOf[FileRepositoryImpl])
   }
 
 }
